@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: "Pariente"
+    given-names: "Emilio"
+  - family-names: "Martín-Millán"
+    given-names: "Marta"
+  - family-names: "Maamar"
+    given-names: "Meryam"
+  - family-names: "Pardo-Lledías"
+    given-names: "Javier"
+  - family-names: "Basterrechea"
+    given-names: "Héctor"
+  - family-names: "Petitta"
+    given-names: "Benedetta"
+  - family-names: "Bianconi"
+    given-names: "Camila"
+  - family-names: "Ramos-Barrón"
+    given-names: "Carmen"
+  - family-names: "Martínez-Taboada"
+    given-names: "Víctor"
+  - family-names: "Hernández"
+    given-names: "José Luis"
+title: "FOSSI Online Calculator: Fast Ossifier Stratification Index (FOSSI) in Diffuse Idiopathic Skeletal Hyperostosis"
+version: "1.0.0"
+doi: "10.5281/zenodo.xxxxx"   # Replace with actual DOI after Zenodo publication
+date-released: 2025-09-22
+url: "https://doi.org/10.5281/zenodo.xxxxx"
+license: "MIT"
+repository-code: "https://github.com/your-org/fossi-calculator"   # Replace with actual repo if available
