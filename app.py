@@ -133,7 +133,10 @@ st.markdown(
 )
 
 st.caption(
-    "References: Pariente et al. 'Fast Ossifier' in DISH, RMD Open (2025) https://doi.org/10.1136/rmdopen-2025-006024; "
-    "FOSSI manuscript (Sept 2025). This tool provides research-oriented risk stratification and "
-    "does not replace clinical judgement. No data are transmitted off your browser in the Streamlit Cloud deployment."
+    "References: (Pariente et al)
+     * "Fast Ossifier in DISH" (RMD Open, sept 2025: https://doi.org/10.1136/rmdopen-2025-006024);
+     * "Fast Ossifier Stratification Index (FOSSI): A propensity tool-derived tool in DISH" (Sept 2025, submitted). 
+    
+This tool provides research-oriented risk stratification and does not replace clinical judgement.
+No data are transmitted off your browser in the Streamlit Cloud deployment."
 )
