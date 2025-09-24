@@ -9,6 +9,7 @@ st.caption("Fast Ossifier Stratification Index in Diffuse Idiopathic Skeletal Hy
 st.markdown 
 (
     """
+,
 **What is FOSSI?**  
 FOSSI (Fast Ossifier Stratification Index) provides sex-specific risk stratification for accelerated ossification in DISH:
 - **FOSSI-F (females)** - predominantly insulin resistance-driven
