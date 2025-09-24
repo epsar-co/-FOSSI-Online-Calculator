@@ -133,7 +133,7 @@ st.markdown(
 )
 
 st.caption(
-    "References: Pariente et al. 'Fast Ossifier' in DISH, RMD Open (2025) 11:e006024; "
+    "References: Pariente et al. 'Fast Ossifier' in DISH, RMD Open (2025) https://doi.org/10.1136/rmdopen-2025-006024; "
     "FOSSI manuscript (Sept 2025). This tool provides research-oriented risk stratification and "
     "does not replace clinical judgement. No data are transmitted off your browser in the Streamlit Cloud deployment."
 )
