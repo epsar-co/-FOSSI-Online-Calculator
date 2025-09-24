@@ -13,10 +13,9 @@ FOSSI (Fast Ossifier Stratification Index) provides sex-specific risk stratifica
 - **FOSSI-F (females)** - predominantly insulin resistance-driven
 - **FOSSI-M (males)** - inflammation / endocrine-driven
 
-This calculator implements the validated equations and thresholds described in the FOSSI manuscript:
+This calculator implements the validated equations and thresholds described in the FOSSI manuscript
  "Pariente et al., Fast Ossifier Stratification Index (FOSSI): A propensity score-derived tool in DISH"
     "(Sept 2025, submitted).\n\n".
-"""
 )
 
 st.divider()
