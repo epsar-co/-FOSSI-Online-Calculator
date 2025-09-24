@@ -137,5 +137,5 @@ st.caption(
      'Fast Ossifier Stratification Index (FOSSI): A propensity tool-derived tool in DISH' (Sept 2025, submitted)
     
 This tool provides research-oriented risk stratification and does not replace clinical judgement.
-No data are transmitted off your browser in the Streamlit Cloud deployment."
+No data are transmitted off your browser in the Streamlit Cloud deployment.
 )
