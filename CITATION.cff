@@ -23,8 +23,8 @@ authors:
     given-names: "José Luis"
 title: "FOSSI Online Calculator: Fast Ossifier Stratification Index (FOSSI) in Diffuse Idiopathic Skeletal Hyperostosis"
 version: "1.0.0"
-doi: "10.5281/zenodo.xxxxx"   # Replace with actual DOI after Zenodo publication
+doi: "10.5281/zenodo.17179002"   # Replace with actual DOI after Zenodo publication
 date-released: 2025-09-22
-url: "https://doi.org/10.5281/zenodo.xxxxx"
+url: "https://doi.org/10.5281/zenodo.17179002"
 license: "MIT"
 repository-code: "https://github.com/your-org/fossi-calculator"   # Replace with actual repo if available
