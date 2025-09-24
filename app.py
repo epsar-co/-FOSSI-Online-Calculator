@@ -1,4 +1,3 @@
-
 import streamlit as st
 
 st.set_page_config(page_title="FOSSI Online Calculator", page_icon="🧮", layout="centered")
@@ -6,18 +5,17 @@ st.set_page_config(page_title="FOSSI Online Calculator", page_icon="🧮", layou
 st.title("FOSSI Online Calculator")
 st.caption("Fast Ossifier Stratification Index in Diffuse Idiopathic Skeletal Hyperostosis (DISH)")
 
-st.markdown 
-(
+st.markdown(
     """
-,
 **What is FOSSI?**  
 FOSSI (Fast Ossifier Stratification Index) provides sex-specific risk stratification for accelerated ossification in DISH:
-- **FOSSI-F (females)** - predominantly insulin resistance-driven
-- **FOSSI-M (males)** - inflammation / endocrine-driven
+- **FOSSI-F (females)** — predominantly insulin resistance–driven  
+- **FOSSI-M (males)** — inflammation / endocrine–driven
 
-This calculator implements the validated equations and thresholds described in the FOSSI manuscript:
- "Pariente et al., Fast Ossifier Stratification Index (FOSSI): A propensity score-derived tool in DISH
-   (Sept 2025, submitted)."
+This calculator implements the validated equations and thresholds described in the FOSSI manuscript:  
+*Pariente et al., Fast Ossifier Stratification Index (FOSSI): A propensity score–derived tool in DISH (Sept 2025, submitted).*
+"""
+)
 
 st.divider()
 
@@ -35,14 +33,28 @@ with st.expander("Input settings"):
     unit = st.radio("Choose units for TG and HDL", options=["mmol/L", "mg/dL"], index=0, horizontal=True)
 
     col5, col6 = st.columns(2)
-    tg = col5.number_input(f"Triglycerides (TG) ({unit})", min_value=0.1, max_value=20.0 if unit=="mmol/L" else 2000.0, value=1.9 if unit=="mmol/L" else 168.0, step=0.1, format="%.2f")
-    hdl = col6.number_input(f"HDL cholesterol ({unit})", min_value=0.1, max_value=10.0 if unit=="mmol/L" else 400.0, value=1.0 if unit=="mmol/L" else 39.0, step=0.01, format="%.2f")
+    tg = col5.number_input(
+        f"Triglycerides (TG) ({unit})",
+        min_value=0.1,
+        max_value=20.0 if unit == "mmol/L" else 2000.0,
+        value=1.9 if unit == "mmol/L" else 168.0,
+        step=0.1,
+        format="%.2f",
+    )
+    hdl = col6.number_input(
+        f"HDL cholesterol ({unit})",
+        min_value=0.1,
+        max_value=10.0 if unit == "mmol/L" else 400.0,
+        value=1.0 if unit == "mmol/L" else 39.0,
+        step=0.01,
+        format="%.2f",
+    )
 
     ht = st.selectbox("Hypertension", options=["No (0)", "Yes (1)"], index=1)
     hypertension = 1 if "Yes" in ht else 0
 
-# Unit conversion if needed
-# mg/dL -> mmol/L conversions: TG: /88.57 ; HDL: /38.67
+# --- Unit conversion (mg/dL -> mmol/L) ---
+# TG: divide by 88.57 ; HDL: divide by 38.67
 if unit == "mg/dL":
     tg_mmol = tg / 88.57
     hdl_mmol = hdl / 38.67
@@ -50,25 +62,23 @@ else:
     tg_mmol = tg
     hdl_mmol = hdl
 
-# Derived indices
-# CMI = [TG (mmol/L)/HDL (mmol/L)] × [WC (cm)/Height (cm)]
+# --- Derived indices ---
+# CMI = [TG (mmol/L) / HDL (mmol/L)] * [WC (cm) / Height (cm)]
 cmi = (tg_mmol / hdl_mmol) * (wc_cm / height_cm)
 
-# VAI (females) = [WC / (36.58 + 1.89 × BMI)] × [TG/0.81] × [1.52/HDL]
-vai = None
+# VAI (females) = [WC / (36.58 + 1.89 * BMI)] * [TG/0.81] * [1.52/HDL]
 if sex == "Female":
-    vai = (wc_cm / (36.58 + 1.89*bmi)) * (tg_mmol/0.81) * (1.52/hdl_mmol)
+    vai = (wc_cm / (36.58 + 1.89 * bmi)) * (tg_mmol / 0.81) * (1.52 / hdl_mmol)
+else:
+    vai = 0.0  # no VAI term in men’s equation
 
-
-
-# FOSSI equations
-
+# --- FOSSI equations (use * for multiplication in Python) ---
 fossi_f = (
     -18.811
     + 0.209 * age
     + 0.350 * bmi
     + 1.359 * cmi
-    + 0.799 * (1 if hypertension else 0)
+    + 0.799 * hypertension
     + 0.203 * vai
 )
 
@@ -77,19 +87,15 @@ fossi_m = (
     + 0.039 * age
     + 0.045 * bmi
     - 0.223 * cmi
-    + 0.015 * wc
+    + 0.015 * wc_cm
 )
 
+# Pick FOSSI by sex
+fossi = fossi_f if sex == "Female" else fossi_m
 
-# Risk categorization & messaging
-def format_number(x, dec=2):
-    try:
-        return f"{x:.{dec}f}"
-    except Exception:
-        return "—"
-
+# --- Risk categorization ---
 if sex == "Female":
-    # thresholds: <5.84 low; 5.84–7.88 intermediate; 7.89–9.58 high; >9.58 very high
+    # Women thresholds: <5.84 Low; 5.84–7.88 Intermediate; 7.89–9.58 High; >9.58 Very High
     if fossi < 5.84:
         risk_label, color, expl = "Low", "green", "Metabolically quiescent; FO prevalence ~12%."
     elif fossi <= 7.88:
@@ -99,26 +105,33 @@ if sex == "Female":
     else:
         risk_label, color, expl = "Very High", "red", "Near-certain FO; severe metabolic burden; trabecular deterioration."
 else:
-    # thresholds: <0.71 grey zone; >=0.71 high/very high
+    # Men thresholds: <0.71 grey zone; ≥0.71 high/very high
     if fossi < 0.71:
         risk_label, color, expl = "Grey zone (<0.71)", "yellow", "Baseline FO prevalence ~17%; monitor closely."
     else:
         risk_label, color, expl = "High/Very High (≥0.71)", "red", "Full FO phenotype; pronounced metabolic overload and trabecular decline."
 
+# --- Helpers ---
+def format_number(x, dec=2):
+    try:
+        return f"{x:.{dec}f}"
+    except Exception:
+        return "—"
+
 st.divider()
 st.subheader("Results")
 
-# Color box
-color_map = {"green":"#E8F5E9", "yellow":"#FFFDE7", "orange":"#FFF3E0", "red":"#FFEBEE"}
+# Result card
+color_map = {"green": "#E8F5E9", "yellow": "#FFFDE7", "orange": "#FFF3E0", "red": "#FFEBEE"}
 st.markdown(
     f"""
     <div style="padding:1rem;border-radius:12px;background:{color_map.get(color,'#F5F5F5')};border:1px solid #e0e0e0;">
-    <b>FOSSI value:</b> {format_number(fossi,2)}<br/>
+    <b>FOSSI value:</b> {format_number(fossi, 2)}<br/>
     <b>Risk category:</b> {risk_label}<br/>
     <i>{expl}</i>
     </div>
     """,
-    unsafe_allow_html=True
+    unsafe_allow_html=True,
 )
 
 with st.expander("Details and derived indices"):
@@ -134,14 +147,14 @@ with st.expander("Details and derived indices"):
 
 st.divider()
 
-
 st.markdown("**FOSSI-F (females)**")
 st.latex(r"\text{FOSSI-F}=-18.811+0.209\,Age+0.350\,BMI+1.359\,CMI+0.799\,Hypertension+0.203\,VAI")
 
 st.markdown("**FOSSI-M (males)**")
 st.latex(r"\text{FOSSI-M}=-4.663+0.039\,Age+0.045\,BMI-0.223\,CMI+0.015\,WC")
 
-
+st.markdown(
+    """
 **Thresholds**  
 - **Women:** <5.84 (Low), 5.84–7.88 (Intermediate), 7.89–9.58 (High), >9.58 (Very High)  
 - **Men:** <0.71 (Grey zone), ≥0.71 (High/Very High)
@@ -158,4 +171,3 @@ st.caption(
     "This tool provides research-oriented risk stratification and does not replace clinical judgment. "
     "No data are transmitted off your browser in the Streamlit Cloud deployment."
 )
-
