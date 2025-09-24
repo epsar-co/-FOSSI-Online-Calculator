@@ -6,7 +6,7 @@ st.set_page_config(page_title="FOSSI Online Calculator", page_icon="🧮", layou
 st.title("FOSSI Online Calculator")
 st.caption("Fast Ossifier Stratification Index in Diffuse Idiopathic Skeletal Hyperostosis (DISH)")
 
-st.markdown(
+st.markdown,(
     """
 **What is FOSSI?**  
 FOSSI (Fast Ossifier Stratification Index) provides sex-specific risk stratification for accelerated ossification in DISH:
