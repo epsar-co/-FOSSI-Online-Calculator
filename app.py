@@ -57,13 +57,27 @@ vai = None
 if sex == "Female":
     vai = (wc_cm / (36.58 + 1.89*bmi)) * (tg_mmol/0.81) * (1.52/hdl_mmol)
 
+
+
 # FOSSI equations
-# FOSSI-F = -18.811 + (0.209×Age) + (0.350×BMI) + (1.359×CMI) + (0.799×Hypertension) + (0.203×VAI)
-# FOSSI-M = -4.663 + (0.039×Age) + (0.045×BMI) - (0.223×CMI) + (0.015×WC)
-if sex == "Female":
-    fossi = -18.811 + (0.209*age) + (0.350*bmi) + (1.359*cmi) + (0.799*hypertension) + (0.203*(vai if vai is not None else 0.0))
-else:
-    fossi = -4.663 + (0.039*age) + (0.045*bmi) - (0.223*cmi) + (0.015*wc_cm)
+
+fossi_f = (
+    -18.811
+    + 0.209 * age
+    + 0.350 * bmi
+    + 1.359 * cmi
+    + 0.799 * (1 if hypertension else 0)
+    + 0.203 * vai
+)
+
+fossi_m = (
+    -4.663
+    + 0.039 * age
+    + 0.045 * bmi
+    - 0.223 * cmi
+    + 0.015 * wc
+)
+
 
 # Risk categorization & messaging
 def format_number(x, dec=2):
@@ -118,11 +132,13 @@ with st.expander("Details and derived indices"):
 
 st.divider()
 
-st.markdown(
-    """
-**Equation summary**  
-- **FOSSI-F (females):** -18.811 + (0.209×Age) + (0.350×BMI) + (1.359×CMI) + (0.799×Hypertension) + (0.203×VAI)  
-- **FOSSI-M (males):** -4.663 + (0.039×Age) + (0.045×BMI) - (0.223×CMI) + (0.015×WC)
+
+st.markdown("**FOSSI-F (females)**")
+st.latex(r"\text{FOSSI-F}=-18.811+0.209\,Age+0.350\,BMI+1.359\,CMI+0.799\,Hypertension+0.203\,VAI")
+
+st.markdown("**FOSSI-M (males)**")
+st.latex(r"\text{FOSSI-M}=-4.663+0.039\,Age+0.045\,BMI-0.223\,CMI+0.015\,WC")
+
 
 **Thresholds**  
 - **Women:** <5.84 (Low), 5.84–7.88 (Intermediate), 7.89–9.58 (High), >9.58 (Very High)  
