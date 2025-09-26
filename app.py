@@ -3,7 +3,7 @@ import streamlit as st
 st.set_page_config(page_title="FOSSI Online Calculator", page_icon="🧮", layout="centered")
 
 st.title("FOSSI Online Calculator")
-st.caption("Fast Ossifier Stratification Index in Diffuse Idiopathic Skeletal Hyperostosis (DISH)")
+st.caption("Fast Ossifier Stratification Index in Diffuse Idiopathic Skeletal Hyperostosis (DISH) v1.0")
 
 st.markdown(
     """
