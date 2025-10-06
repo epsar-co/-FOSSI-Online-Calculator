@@ -27,7 +27,7 @@ The easiest way to use FOSSI is via the **[FOSSI Online Calculator](https://epsa
 
 Clone the repo and install dependencies:
 
-git clone https://github.com/epsar-co/-fossi-calculator.git
+git clone https://github.com/epsar-co/-fossi-online-calculator.git
 cd fossi-calculator
 pip install -r requirements.txt
 streamlit run app.py
