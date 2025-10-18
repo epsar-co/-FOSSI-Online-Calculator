@@ -1,6 +1,62 @@
 
 import streamlit as st
 
+import uuid
+from datetime import datetime
+
+SUPABASE_URL = st.secrets.get("SUPABASE_URL")
+SUPABASE_ANON_KEY = st.secrets.get("SUPABASE_ANON_KEY")
+
+try:
+    from supabase import create_client, Client
+except Exception:
+    Client = None
+    create_client = None
+
+supabase: "Client | None" = None
+if create_client and SUPABASE_URL and SUPABASE_ANON_KEY:
+    try:
+        supabase = create_client(SUPABASE_URL, SUPABASE_ANON_KEY)
+    except Exception as _e:
+        supabase = None
+        st.session_state["_usage_err_init"] = str(_e)
+
+# Sesión pseudo-única por navegador
+if "session_id" not in st.session_state:
+    st.session_state.session_id = str(uuid.uuid4())
+
+
+def _safe_insert_usage(sex: str, fossi_value: float, risk_label: str):
+    """Inserta un registro de uso en Supabase; falla en silencio con aviso."""
+    if not supabase:
+        return
+    try:
+        payload = {
+            "id": str(uuid.uuid4()),
+            "ts": datetime.utcnow().isoformat(),
+            "session_id": st.session_state.session_id,
+            "sex": sex,
+            "fossi": float(fossi_value),
+            "risk_label": risk_label
+        }
+        supabase.table("usage").insert(payload).execute()
+    except Exception as e:
+        st.session_state["_usage_err_insert"] = str(e)
+
+def _safe_get_global_count() -> int | None:
+    """Devuelve el conteo global de cálculos registrados en Supabase."""
+    if not supabase:
+        return None
+    try:
+        # Truco del count: select con count='exact'
+        resp = supabase.table("usage").select("id", count="exact").execute()
+        # En supabase-py, el conteo viene en resp.count
+        return int(resp.count) if hasattr(resp, "count") and resp.count is not None else None
+    except Exception as e:
+        st.session_state["_usage_err_count"] = str(e)
+        return None
+
+
 st.set_page_config(page_title="FOSSI Online Calculator", page_icon="🧮", layout="centered")
 
 st.title("FOSSI Online Calculator")
@@ -89,6 +145,26 @@ else:
     else:
         risk_label, color, expl = "High/Very High (≥0.71)", "red", "Full FO phenotype; pronounced metabolic overload and trabecular decline."
 
+# =========================
+#   CONTADOR (local + Supabase)
+# =========================
+if "fossi_counter" not in st.session_state:
+    st.session_state.fossi_counter = 0
+    st.session_state.last_fossi = None
+    st.session_state.last_risk = None
+
+# Incrementar sólo si ha cambiado el valor (evita contar simples repaints)
+if st.session_state.last_fossi != fossi:
+    st.session_state.fossi_counter += 1
+    st.session_state.last_fossi = fossi
+    st.session_state.last_risk = risk_label
+    # Registrar en Supabase (persistente)
+    _safe_insert_usage(sex=sex, fossi_value=fossi, risk_label=risk_label)
+
+# Consultar contador global (una vez por render — es rápido; si lo prefieres, envuélvelo en st.cache_data con ttl)
+global_count = _safe_get_global_count()
+
+
 st.divider()
 st.subheader("Results")
 
@@ -104,6 +180,20 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
+st.divider()
+colG1, colG2 = st.columns(2)
+colG1.metric("Your session calculations", st.session_state.get("fossi_counter", 0))
+colG2.metric("Global calculations (all users)", "—" if global_count is None else f"{global_count:,}")
+
+# Mensajes de diagnóstico (opcionales)
+if "_usage_err_init" in st.session_state:
+    st.info(f"Telemetry disabled (init): {st.session_state['_usage_err_init']}")
+if "_usage_err_insert" in st.session_state:
+    st.info(f"Usage not logged: {st.session_state['_usage_err_insert']}")
+if "_usage_err_count" in st.session_state:
+    st.info(f"Global count unavailable: {st.session_state['_usage_err_count']}")
+
 
 with st.expander("Details and derived indices"):
     colA, colB = st.columns(2)
