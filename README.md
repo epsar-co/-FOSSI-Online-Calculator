@@ -45,10 +45,7 @@ Documentation & example dataset → CC BY 4.0
 
 If you use this tool, please cite:
 
-Pariente E, Martín-Millán M, Sgaramella G, et al.
-‘Fast Ossifier’ in diffuse idiopathic skeletal hyperostosis: a sex-modulated, heterogeneous phenotype with accelerated ossification and early trabecular decline.
-RMD Open. 2025;11:e006024. https://doi.org/10.1136/rmdopen-2025-006024
-
+Pariente E, Martín-Millán M, Maamar M, Pardo-Lledías J, Basterrechea H, Petitta B, Bianconi C, Ramos-Barrón C, Martínez-Taboada V, Hernández JL. Metabolic and osteogenic susceptibility in DISH: A prognostic index from propensity score modelling. Bone. 2026 Feb 5;206:117819. https://doi.org/10.1016/j.bone.2026.117819. Epub ahead of print. PMID: 41651202.
 
 ✉️ For questions or collaborations, please contact:
 Emilio Pariente (MD, PhD) – emilio.pariente@scsalud.es
